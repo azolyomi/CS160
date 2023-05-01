@@ -16,7 +16,8 @@ In this assignment, you will get some practice writing simple functions in OCaml
   
 	 If you don't want to install things globally (it should be easier for our purposes, because you only need to do this once, but for a real project, it's bad practice), see: https://ocamlverse.net/content/quickstart_ocaml_project_dune.html
 
-* You are **not** allowed to use any built-in OCaml functions, except for `List.map`, for any of the problems. If you do, you will not be awarded any points. Note that datatype constructors (e.g., `[]`, `::`, `None`, and `Some`) and patterns (e.g., `| hd::tl -> ...` in a pattern-match) are not considered as functions, so you may freely use them.
+* You are **not** allowed to use any built-in OCaml functions, except for `List.map`, for any of the problems. To clarify, the `@` function for concatenating lists is **not allowed**. If you do, you will not be awarded any points. Note that datatype constructors (e.g., `[]`, `::`, `None`, and `Some`) and patterns (e.g., `| hd::tl -> ...` in a pattern-match) are not considered as functions, so you may freely use them.
+* The ocaml function application operators, `|>` and `@@` are allowed.
 
 * Because you are learning a new programming language and using features that may be unfamiliar to you, we recommend that you start early on this homework.
 
@@ -50,8 +51,23 @@ In this assignment, you will get some practice writing simple functions in OCaml
 * You can run `dune fmt` to have your code automatically beautified.
 
 * If you are struggling, please ask questions on Slack or come to office hours. In particular, let us know if you need additional practice with recursion.
-
-
+* Note on testing. *When you copy the homework, make sure you copy the
+  `dune` files and `dune-project` as well!* This is very important
+  because your code won't build. You might want to try downloading a
+  zip using this [download github
+  directory](https://download-directory.github.io/?url=https%3A%2F%2Fgithub.com%2Ffredfeng%2FCS160%2Ftree%2Fmain%2Fassignments%2Fhw1)
+  tool, if you don't want to clone the CS160 repo. After that:
+  ``` sh
+  dune utop 
+  utop> open Hw1.Listy;; 
+  utop> open Hw1.Treey;; 
+  ```
+  VS Code also has a `utop` integration. See: [vs-code ocaml commands](https://github.com/ocamllabs/vscode-ocaml-platform#commands).
+  For running the tests, do:
+  ```sh
+  dune runtest 
+  ```
+	 *in `hw1` folder/directory* (the directory this readme is located) to run the public tests. **if you do that command somewhere else, it won't work**. If you have questions on running tests, please ask one of the TA on slack (#hw1 channel) or come to our office hours.
 
 ## Part 1: Listy (17 pts)
 
@@ -186,6 +202,8 @@ You will implement the following functions:
     then `insert [O;O] 6 t` returns the new trie:
 	
 	<img src="./images/trie-ins.png" width="50%">
+	
+	Edge case: For the case where the key is *longer* than the tree(if you reach the leaf before you can insert), for example, `insert [O; O; O; O; O;]`, insert intermediate `None` Nodes into the tree to extend the tree to allow for those extra nodes, then insert your value. Let me know on slack if you want me to make a diagram for this
 
 ## Submission
 

@@ -2,7 +2,7 @@ open Tree
 open Hw1
 open Listy
 open Treey
-
+open Test_lib
 (* The tests for Listy *)
 let test_prepend () =
   (* normal test *)
@@ -176,7 +176,7 @@ let test_skeleton () =
      let t3 = node () t1 t2 in
      let t4 = node' () in
      let t5 = node () t3 t4 in
-     [%derive.show: unit tree] t5)
+     t5)
     (let t1 = node' 2 in
      let t2 = node' 3 in
      let t3 = node 1 t1 t2 in
@@ -206,7 +206,7 @@ let test_selfie () =
      let tt1 = node' t3 in
      let tt2 = node' t3 in
      let tt3 = node t3 tt1 tt2 in
-     [%derive.show: int tree tree] tt3)
+     tt3)
     (let t1 = node' 1 in
      let t2 = node' 2 in
      let t3 = node 0 t1 t2 in
@@ -244,7 +244,7 @@ let test_timestamp () =
      let t4 = node' (5, "r") in
      let t5 = node (3, "m") t3 t4 in
      let t6 = node (0, "n") t2 t5 in
-     [%derive.show: (int * string) tree] t6)
+      t6)
     (let t1 = node' "b" in
      let t2 = node "u" t1 leaf in
      let t3 = node' "e" in
@@ -442,12 +442,15 @@ let () =
   let open Alcotest in
   run "public tests"
     [
+      (* Listy tests *)
       ("prepend", [ test_case "prepend" `Slow test_prepend ]);
       ("append", [ test_case "append" `Slow test_append ]);
       ("cat", [ test_case "cat" `Slow test_cat ]);
       ("zip", [ test_case "zip" `Slow test_zip ]);
       ("zip-fail", [ test_case "zip-fail" `Slow test_zip_fail ]);
       ("permute", [ test_case "permute" `Slow test_permute ]);
+
+      (* Treey tests *)
       ("skeleton", [ test_case "skeleton" `Slow test_skeleton ]);
       ("selfie", [ test_case "selfie" `Slow test_selfie ]);
       ("timestamp", [ test_case "timestamp" `Slow test_timestamp ]);
