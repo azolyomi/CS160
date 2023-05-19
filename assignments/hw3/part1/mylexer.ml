@@ -98,12 +98,12 @@ module Calc = struct
   let rules : rules =
     from_list
       [
-        ((dummy number).kind, todo (), true);
-        ((dummy plus).kind, todo (), true);
-        ((dummy mult).kind, todo (), true);
-        ((dummy lparen).kind, todo (), true);
-        ((dummy rparen).kind, todo (), true);
-        ((dummy whitespace).kind, todo (), false);
+        ((dummy number).kind, star (alts_of_string "0123456789")  (), true);
+        ((dummy plus).kind, r_of_char "+", true);
+        ((dummy mult).kind, r_of_char "*", true);
+        ((dummy lparen).kind, r_of_char "(", true);
+        ((dummy rparen).kind, r_of_char ")", true);
+        ((dummy whitespace).kind, alts_of_string " \r\t\n", false);
       ]
 
   let lex (s : string) : output = lex (List.map Ascii.of_char (explode s)) rules

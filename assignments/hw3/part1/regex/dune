@@ -5,6 +5,7 @@
 
 (library
  (name regex)
+ (public_name regex)
  (libraries language utils ocamlgraph)
  (preprocess
   (pps ppx_deriving.show ppx_deriving.eq ppx_deriving.ord ppx_hash))

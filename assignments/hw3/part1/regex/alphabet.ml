@@ -34,8 +34,8 @@ module Ascii : sig
 end = struct
   type t = char option [@@deriving eq, ord, show]
 
-  let lo = 0
-  let hi = 128
+  let lo = 32
+  let hi = 127
   let range lo hi = List.init (hi - lo) (fun i -> i + lo)
   let non_epsilon = List.map (fun i -> Some (Char.chr i)) (range 32 126)
 
