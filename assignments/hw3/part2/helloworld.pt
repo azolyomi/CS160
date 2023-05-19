@@ -1,0 +1,13 @@
+fn sevens(num: int) -> [int] {
+    let xs: [int] = alloc(num);
+    let i: int = 0;
+    while i < num {
+        xs[i] = 7;
+        i = i + 1;
+    }
+}
+
+fn main () -> unit {
+    let xs: [int] = sevens(3);
+    print_int(xs[1]);
+}
