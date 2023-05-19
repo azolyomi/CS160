@@ -3,11 +3,28 @@ fn sevens(num: int) -> [int] {
     let i: int = 0;
     while i < num {
         xs[i] = 7;
-        i = i + 1;
-    }
+        i = i + 1
+    };
+    xs
+}
+
+fn isPerfect(num: int) -> bool {
+    let i: int = 2;
+    let sum: int = 1;
+    while i < num {
+        let div: int = (num / i);
+        if ((div * i) == num) 
+        then {
+            sum = sum + i;
+            i = i + 1
+        } 
+        else { i = i + 1 }
+    };
+    sum == num
 }
 
 fn main () -> unit {
     let xs: [int] = sevens(3);
     print_int(xs[1]);
+    print_bool(isPerfect(6))
 }
