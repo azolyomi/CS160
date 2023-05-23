@@ -63,16 +63,18 @@ struct
     let alts es = Alts es
 
     (** Cat *)
-    let ( <*> ) e1 e2 = todo ()
+    let ( <*> ) e1 e2 = seq [ e1; e2 ]
 
     (** Or *)
-    let ( <|> ) e1 e2 = todo ()
+    let ( <|> ) e1 e2 = alts [ e1; e2 ]
 
     (** Epsilon *)
-    let epsilon = todo ()
+    let epsilon = seq []
 
     (** Void *)
-    let void = todo ()
+    let void = alts []
+
+    (** Star *)
   end
 
   (** Find the RHS expression associated with the LHS non-terminal *)
@@ -109,9 +111,35 @@ struct
           | _ ->
               (* there's no way to parse *)
               [])
-      | Nonterm nt -> todo ()
-      | Alts es -> todo ()
-      | Seq es -> todo ()
+      | Nonterm nt -> (
+          let parse_result = interpret' ps (ps <?> nt) ts in
+          match parse_result with
+          | [] -> [] (* failed parse*)
+          | ts' :: _ -> [ ts' ] (* succeeded to parse leaving ts' unconsumed *)
+        )
+      | Alts es -> (
+          match es with
+          | [] -> [] (* empty means we're screwed *)
+          | e :: es' -> (* try to parse w/first alt *)
+              let ts' = interpret' ps e ts in
+              if List.length ts' > 0 then
+                (* there's a way to parse using the first alternative *)
+                ts'
+              else
+                (* there's no way to parse using the first alternative, try the rest *)
+                interpret' ps (Alts es') ts
+        )
+      | Seq es -> (
+          match es with
+          | [] -> [ ts ] (* empty means we have to parse using the rest of the sequence *)
+          | e :: es' ->
+              let ts' = interpret' ps e ts in
+              List.concat (
+                List.map (
+                  fun t -> interpret' ps (Seq es') t)
+                ts' (* try to parse using the rest *)
+              )
+      )
 
     (* Return true iff there's way to parse the input by consuming all tokens *)
     let interpret (g : grammar) (ts : input) : output =
@@ -154,23 +182,7 @@ struct
       parses. For each possible parse, tr is the  parse tree for the consumed 
       part of the input, and ts is the unconsumed part of the input *)
 
-    let rec interpret' (ps : productions) (e : expr) (ts : input) : output' =
-      (* ep "[interpret'] ts = %s\te = %s\n" (show_input ts) (show_expr e); *)
-      match e with
-      | Term tk -> (
-          (* input must start with token tk *)
-          match ts with
-          | tk' :: ts' when Token.equal tk tk' ->
-              (* there's only one way to parse by consuming the first token,
-                  which leaves ts' unconsumed.
-                 the consumed token tk becomes a leaf *)
-              [ (Leaf tk', ts') ]
-          | _ ->
-              (* there's no way to parse *)
-              [])
-      | Nonterm nt' -> todo ()
-      | Alts es -> todo ()
-      | Seq es -> todo ()
+    let rec interpret' (ps : productions) (e : expr) (ts : input) : output' = todo ()
 
     (** Return the parse trees from all parses that fully consume the input *)
     let interpret (g : grammar) (ts : input) : output =

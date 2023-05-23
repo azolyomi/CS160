@@ -21,6 +21,8 @@ module type Syntax = sig
   val pp_word : Format.formatter -> word -> unit
   (** Pretty-print a word *)
 
+  val equal_word : word -> word -> bool
+
   (** Utility functions to build regular expressions *)
   module Notation : sig
     val void : program

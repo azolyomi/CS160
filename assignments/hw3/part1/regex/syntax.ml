@@ -3,14 +3,14 @@ open Utils
 (** Make a regex syntax, parameterized by an alphabet. *)
 module Make (A : Alphabet.S) :
   Sig.Syntax with type symbol = A.t and type word = A.t list = struct
-  type symbol = A.t [@@deriving show]
+  type symbol = A.t [@@deriving show, eq]
   (** A symbol is drawn from the alphabet *)
 
   type word =
     (symbol list
     [@printer
       fun fmt cs -> fprintf fmt "%s" (String.concat "" (List.map A.show cs))])
-  [@@deriving show]
+  [@@deriving show, eq]
   (** A word is a list of symbols *)
 
   type program =
@@ -38,15 +38,9 @@ module Make (A : Alphabet.S) :
     let ( <*> ) r1 r2 = Cat (r1, r2)
     let ( <|> ) r1 r2 = Or (r1, r2)
     let opt (r : program) : program = r <|> epsilon
-
-    let plus (r : program) : program =
-      (* Replace epsilon with your code *) epsilon
-
-    let seq (rs : program list) : program =
-      (* Replace epsilon with your code *) epsilon
-
-    let alts (rs : program list) : program =
-      (* Replace epsilon with your code *) epsilon
+    let plus (r : program) : program = r <*> star r
+    let seq (rs : program list) : program = List.fold_right (<*>) rs epsilon
+    let alts (rs : program list) : program = List.fold_right (<|>) rs void
   end
 end
 
